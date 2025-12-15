@@ -1,0 +1,40 @@
+# -------------------------------------------------------------------------
+# 1. Environment & Dependencies (Crucial to Exclude)
+# -------------------------------------------------------------------------
+# Ignore Python virtual environments
+.venv
+venv
+ENV/
+
+# Byte-code files
+*.pyc
+__pycache__/
+
+# Package distribution
+dist/
+build/
+*.egg-info/
+
+
+# -------------------------------------------------------------------------
+# 2. Operating System Files (macOS/Windows)
+# -------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+
+# -------------------------------------------------------------------------
+# 3. IDE/Editor Files (VS Code)
+# -------------------------------------------------------------------------
+# VS Code specific files (stores workspace state)
+.vscode/
+
+# -------------------------------------------------------------------------
+# 4. Local Build/Output Files
+# -------------------------------------------------------------------------
+# Logs
+*.log
+
+# Docker/K8s specific local files
+# Docker compose environment files
+.env
