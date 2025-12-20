@@ -40,18 +40,4 @@ jobs:
 
       - name: Push to Docker Hub
         run: make push
-
-
-(.venv) jdiamond@jdiamond-l2:~/code/jamf/hello-world-app$ git commit -m "Added GitHub Actions CI workflow file"
-[master d85acde] Added GitHub Actions CI workflow file
- 1 file changed, 42 insertions(+)
-(.venv) jdiamond@jdiamond-l2:~/code/jamf/hello-world-app$ git push
-Enumerating objects: 9, done.
-Counting objects: 100% (9/9), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (5/5), 824 bytes | 824.00 KiB/s, done.
-Total 5 (delta 1), reused 0 (delta 0)
-remote: Resolving deltas: 100% (1/1), completed with 1 local object.
-To https://github.com/diamondj1991/hello-world-app.git
-   fe0e448..d85acde  master -> master
+        
