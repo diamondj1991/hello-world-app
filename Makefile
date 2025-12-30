@@ -1,6 +1,6 @@
 # Variables (?= will allow us to run `make build {major.minor.patch}` on minor versions without editing the file)
 IMAGE_NAME := jdiamond1991/hello-world-app
-VERSION ?= v2.0.0
+VERSION ?= v4.0.0
 TAG := $(VERSION)
 
 .PHONY: install test build push clean
