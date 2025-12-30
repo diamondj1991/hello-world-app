@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Use the same base image for consistency
 FROM python:3.11-slim
 
+# Force the stdout and stderr streams to be unbuffered
+ENV PYTHONUNBUFFERED=1
+
 # Set the working directory for the application
 WORKDIR /app
 
