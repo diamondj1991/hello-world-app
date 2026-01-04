@@ -1,4 +1,4 @@
-# Variables (?= will allow us to run `make build {major.minor.patch}` on minor versions without editing the file)
+# Variables (?= will allow us to override versioning `make build {major.minor.patch}` via the CLI without editing the file)
 IMAGE_NAME := jdiamond1991/hello-world-app
 VERSION ?= v4.0.0
 TAG := $(VERSION)
