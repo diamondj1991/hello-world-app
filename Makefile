@@ -1,6 +1,6 @@
 # Variables (?= will allow us to override versioning `make build {major.minor.patch}` via the CLI without editing the file)
 IMAGE_NAME := jdiamond1991/hello-world-app
-VERSION ?= v5.0.0
+VERSION ?= v6.0.0
 TAG := $(VERSION)
 
 .PHONY: install test build push clean
