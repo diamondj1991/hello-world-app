@@ -42,18 +42,27 @@ jobs:
           make build VERSION=${{ steps.vars.outputs.sha_short }}
           make push VERSION=${{ steps.vars.outputs.sha_short }}
 
-      # 6. THE CROSS-REPO BRIDGE
+      # 6. THE CROSS-REPO BRIDGE (Manual GitOps Update)
       # We check out the INFRA repo using a Personal Access Token (PAT)
       - name: Update Infra Repo YAML
-        if: github.event_name == 'push' # Only update infra on merge/push, not PRs
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          repository: diamondj1991/hello-world-infra
-          branch: master
-          # This points to the image tag inside your Helm values.yaml
-          valueFile: './charts/hello-world-app/values.yaml'
-          propertyPath: 'image.tag'
-          value: ${{ steps.vars.outputs.sha_short }}
-          message: 'chore: update image tag to ${{ steps.vars.outputs.sha_short }}'
-          token: ${{ secrets.INFRA_REPO_PAT }}
+        if: github.event_name == 'push'
+        run: |
+          # 1. Clone the infra repo into a temp folder
+          git clone https://x-access-token:${{ secrets.INFRA_REPO_PAT }}@github.com/diamondj1991/hello-world-infra.git infra-tmp
+          
+          # 2. Navigate to the infra repo
+          cd infra-tmp
+          
+          # 3. Update the tag using yq
+          # We use the SHA generated in step 2
+          yq -i '.image.tag = "${{ steps.vars.outputs.sha_short }}"' charts/hello-world-app/values.yaml
+          
+          # 4. Git Housekeeping
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          # 5. Commit and Push back to the infra repo
+          git add charts/hello-world-app/values.yaml
+          git commit -m "chore: automated image update to ${{ steps.vars.outputs.sha_short }}"
+          git push origin master
         
