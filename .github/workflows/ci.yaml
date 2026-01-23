@@ -15,29 +15,45 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Set up the Python environment
+      # 2. Generate a unique tag based on the Git Commit
+      - name: Set Short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      # 3. Set up the Python environment
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 3. Authenticate with Docker Hub using our Secrets
+      # 4. Authenticate with Docker Hub using our Secrets
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 4. Use the Makefile "Golden Path" targets
-      - name: Install Dependencies
-        run: make install
+      # 5. Use the Makefile "Golden Path" targets - Build and Push using the SHA as the version
+      # We override the VERSION variable in the Makefile
+      - name: Build, Test and Push Docker Image
+        run: |
+          make install
+          make test
+          make build VERSION=${{ steps.vars.outputs.sha_short }}
+          make push VERSION=${{ steps.vars.outputs.sha_short }}
 
-      - name: Run Tests
-        run: make test
-
-      - name: Build Docker Image
-        run: make build
-
-      - name: Push to Docker Hub
-        run: make push
+      # 6. THE CROSS-REPO BRIDGE
+      # We check out the INFRA repo using a Personal Access Token (PAT)
+      - name: Update Infra Repo YAML
+        if: github.event_name == 'push' # Only update infra on merge/push, not PRs
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          repository: diamondj1991/hello-world-infra
+          branch: master
+          # This points to the image tag inside your Helm values.yaml
+          valueFile: 'charts/hello-world-app/values.yaml'
+          propertyPath: 'image.tag'
+          value: ${{ steps.vars.outputs.sha_short }}
+          message: 'chore: update image tag to ${{ steps.vars.outputs.sha_short }}'
+          token: ${{ secrets.INFRA_REPO_PAT }}
         
