@@ -51,7 +51,7 @@ jobs:
           repository: diamondj1991/hello-world-infra
           branch: master
           # This points to the image tag inside your Helm values.yaml
-          valueFile: 'charts/hello-world-app/values.yaml'
+          valueFile: './charts/hello-world-app/values.yaml'
           propertyPath: 'image.tag'
           value: ${{ steps.vars.outputs.sha_short }}
           message: 'chore: update image tag to ${{ steps.vars.outputs.sha_short }}'
