@@ -61,8 +61,8 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           
-          # 5. Commit and Push back to the infra repo
+          # 5. Commit and Push (explicitly using the token in the remote) back to the infra repo
           git add charts/hello-world-app/values.yaml
           git commit -m "chore: automated image update to ${{ steps.vars.outputs.sha_short }}"
-          git push origin master
+          git push https://x-access-token:${{ secrets.INFRA_REPO_PAT }}@github.com/diamondj1991/hello-world-infra.git master
         
